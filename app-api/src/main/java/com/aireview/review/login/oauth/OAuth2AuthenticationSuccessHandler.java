@@ -34,14 +34,14 @@ public class OAuth2AuthenticationSuccessHandler extends LoginSuccessHandler {
 
         OAuth2UserInfo userInfo = getOAuth2UserInfo(oauthProvider, oauth2User);
 
-        Optional<User> oauthUser = userService.findOauthUser(oauthProvider, userInfo.getOauthUserId());
+        Optional<User> oauthUser = userService.findOauthUser(userInfo.getOauthProvider(), userInfo.getOauthUserId());
         return oauthUser
                 .orElseGet(() -> persistUser(userInfo));
     }
 
 
     private OAuth2UserInfo getOAuth2UserInfo(String oauthProvider, OAuth2User oauth2User) {
-        return OAuth2UserAttributeConverter
+        return OAuth2UserAttribute2OAuthUserInfoConverter
                 .getUserInfoFromOAuth2UserAttribute(oauthProvider, oauth2User.getAttributes());
     }
 

@@ -17,10 +17,6 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    public ErrorResponse(Throwable throwable) {
-        this.message = throwable.getMessage();
-    }
-
     public ErrorResponse(Map<String, String> fieldError) {
         this.fieldError = fieldError;
     }

@@ -1,22 +1,24 @@
 package com.aireview.review.login.oauth;
 
+import com.aireview.review.domain.user.Email;
+import com.aireview.review.domain.user.OAuthProvider;
+
 import java.util.Map;
 
-public enum OAuth2UserAttributeConverter {
+public enum OAuth2UserAttribute2OAuthUserInfoConverter {
     NAVER {
-        @Override
         public OAuth2UserInfo from(Map<String, Object> attributes) {
             Map<String, Object> response = (Map<String, Object>) attributes.get("response");
-
             return new OAuth2UserInfo(
                     (String) response.get("name"),
                     (String) response.get("nickname"),
-                    (String) response.get("email"),
-                    (String) response.get("oauthUserId"),
-                    this.name());
+                    Email.of((String) response.get("email")),
+                    (String) response.get("id"),
+                    OAuthProvider.NAVER);
 
         }
     },
+
     KAKAO {
         @Override
         protected OAuth2UserInfo from(Map<String, Object> attributes) {
@@ -25,18 +27,17 @@ public enum OAuth2UserAttributeConverter {
             return new OAuth2UserInfo(
                     (String) kakaoAccount.get("name"),
                     (String) profile.get("nickname"),
-                    (String) kakaoAccount.get("email"),
+                    Email.of((String) kakaoAccount.get("email")),
                     attributes.get("id").toString(),
-                    this.name());
+                    OAuthProvider.KAKAO);
         }
     };
 
     protected abstract OAuth2UserInfo from(Map<String, Object> attributes);
 
-    public static OAuth2UserInfo getUserInfoFromOAuth2UserAttribute(String registrationId, Map<String, Object> oauthAttributes) {
-        OAuth2UserAttributeConverter converter = OAuth2UserAttributeConverter.valueOf(registrationId.toUpperCase());
-        return converter.from(oauthAttributes);
+
+    public static OAuth2UserInfo getUserInfoFromOAuth2UserAttribute(String oauthProvider, Map<String, Object> attributes) {
+        return OAuth2UserAttribute2OAuthUserInfoConverter.valueOf(oauthProvider.toUpperCase())
+                .from(attributes);
     }
-
-
 }

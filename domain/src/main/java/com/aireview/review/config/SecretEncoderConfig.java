@@ -1,12 +1,8 @@
-package com.aireview.review.config.security;
+package com.aireview.review.config;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
-import org.springframework.stereotype.Component;
-
-import java.beans.ConstructorProperties;
 
 @Getter
 @ConfigurationProperties(prefix = "secret.encoder")
